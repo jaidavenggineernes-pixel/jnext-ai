@@ -162,9 +162,9 @@ export default function CodingAssistantPage() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-6rem)] gap-6">
+    <div className="flex flex-col md:flex-row h-full gap-4 md:gap-6">
       {/* Left Pane: Chat */}
-      <GlassCard className="flex flex-col w-1/3 h-full p-0 overflow-hidden border-r border-glass-border/40">
+      <GlassCard className="flex flex-col w-full md:w-1/3 h-1/2 md:h-full p-0 overflow-hidden border-r border-glass-border/40">
         <div className="p-4 border-b border-glass-border/40 bg-glass-bg/50">
           <h2 className="font-semibold flex items-center">
             <Bot className="w-5 h-5 mr-2 text-primary" /> Copilot Chat

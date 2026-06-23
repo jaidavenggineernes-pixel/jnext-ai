@@ -142,8 +142,8 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6rem)] max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="flex flex-col h-full max-w-4xl mx-auto">
+      <div className="flex items-center justify-between mb-2 md:mb-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">AI Assistant</h1>
           <p className="text-sm text-muted-foreground">Powered by advanced AI models</p>

@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,7 @@ import { LayoutDashboard, MessageSquare, Code2, Image as ImageIcon, Video, Histo
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   const navItems = [
     { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -20,9 +21,59 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-transparent">
-      {/* Floating Sidebar Container */}
-      <div className="w-72 h-full p-6 flex flex-col z-20 hidden md:flex">
+    <div className="flex flex-col md:flex-row h-[100dvh] overflow-hidden bg-black text-white selection:bg-primary/30">
+      
+      {/* MOBILE TOPBAR */}
+      <div className="md:hidden flex items-center justify-between p-4 border-b border-white/10 bg-black/50 backdrop-blur-md z-40">
+        <Link href="/" className="flex items-center space-x-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
+            <span className="text-white font-bold text-sm">J</span>
+          </div>
+          <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">JNext</span>
+        </Link>
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-2 rounded-xl bg-white/5 border border-white/10 text-white"
+        >
+          {isMobileMenuOpen ? <LogOut className="w-5 h-5 rotate-180" /> : <LayoutDashboard className="w-5 h-5" />}
+        </button>
+      </div>
+
+      {/* MOBILE MENU OVERLAY */}
+      {isMobileMenuOpen && (
+        <div className="absolute inset-0 top-[73px] z-40 bg-black/95 backdrop-blur-xl flex flex-col md:hidden p-4 overflow-y-auto border-t border-white/5">
+          <div className="flex-1 space-y-2 mt-4">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={cn(
+                    "flex items-center space-x-4 px-4 py-4 rounded-2xl text-base font-medium transition-all relative border border-transparent",
+                    isActive 
+                      ? "text-white bg-primary/10 border-primary/20" 
+                      : "text-muted-foreground hover:text-white hover:bg-white/5"
+                  )}
+                >
+                  <item.icon className={cn("w-6 h-6", isActive ? "text-primary" : "text-muted-foreground")} />
+                  <span>{item.name}</span>
+                </Link>
+              );
+            })}
+          </div>
+          <div className="mt-auto pt-6 pb-8 border-t border-white/10">
+            <Link href="/dashboard/settings" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-4 px-4 py-4 rounded-2xl text-base font-medium text-muted-foreground hover:bg-white/5 hover:text-white transition-all">
+              <Settings className="w-6 h-6" />
+              <span>Settings</span>
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* DESKTOP SIDEBAR */}
+      <div className="w-72 h-full p-6 flex-col z-20 hidden md:flex">
         <aside className="w-full h-full glass-panel border border-glass-border/40 rounded-3xl flex flex-col overflow-hidden shadow-2xl bg-black/20">
           <div className="h-20 flex items-center px-6 border-b border-white/5">
             <Link href="/" className="flex items-center space-x-3">
@@ -85,8 +136,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
 
       {/* Main Content Area */}
-      <main className="flex-1 h-full overflow-y-auto relative z-10 p-6 pl-0">
-        <div className="w-full h-full rounded-3xl relative">
+      <main className="flex-1 h-full overflow-y-auto relative z-10 p-4 md:p-6 md:pl-0">
+        <div className="w-full h-full rounded-2xl md:rounded-3xl relative">
           {children}
         </div>
       </main>
