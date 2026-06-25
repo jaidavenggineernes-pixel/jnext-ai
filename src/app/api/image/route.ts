@@ -97,7 +97,42 @@ export async function POST(req: Request) {
       height = 1024;
     }
     
-    const base64Image = `https://image.pollinations.ai/prompt/${encodeURIComponent(enhancedPrompt)}?seed=${seed}&width=${width}&height=${height}&nologo=true&model=flux&enhance=false`;
+    let finalImageUrl = "";
+
+    const replicateToken = process.env.REPLICATE_API_TOKEN;
+    if (replicateToken) {
+      const Replicate = (await import("replicate")).default;
+      const replicate = new Replicate({
+        auth: replicateToken,
+      });
+
+      console.log("Generating image with Replicate SDXL...");
+      // For stability-ai/sdxl, the output is an array of image URLs
+      const output = await replicate.run(
+        "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
+        {
+          input: {
+            prompt: finalPrompt,
+            negative_prompt: negativePrompt || "",
+            width: width,
+            height: height,
+            scheduler: "K_EULER",
+            num_outputs: 1,
+            guidance_scale: 7.5,
+            num_inference_steps: 50
+          }
+        }
+      );
+      
+      if (Array.isArray(output) && output.length > 0) {
+        finalImageUrl = output[0]; // SDXL returns an array of URLs
+      }
+    } 
+
+    if (!finalImageUrl) {
+      console.log("Falling back to Pollinations AI...");
+      finalImageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(enhancedPrompt)}?seed=${seed}&width=${width}&height=${height}&nologo=true&model=flux&enhance=false`;
+    }
 
     // Save to database if user is logged in
     if (session?.user?.email) {
@@ -110,14 +145,14 @@ export async function POST(req: Request) {
           data: {
             userId: dbUser.id,
             type: "image",
-            url: base64Image,
+            url: finalImageUrl,
             prompt: finalPrompt,
           },
         });
       }
     }
 
-    return new Response(JSON.stringify({ imageUrl: base64Image }), {
+    return new Response(JSON.stringify({ imageUrl: finalImageUrl }), {
       headers: { "Content-Type": "application/json" }
     });
 
