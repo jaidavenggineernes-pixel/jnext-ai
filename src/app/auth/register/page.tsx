@@ -53,13 +53,11 @@ export default function RegisterPage() {
       <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="w-full max-w-md p-4 relative z-10">
-        <div className="flex flex-col items-center mb-8">
-          <Link href="/" className="flex items-center space-x-2 mb-2">
-            <Sparkles className="w-8 h-8 text-primary" />
-            <span className="text-3xl font-bold tracking-tight">JNext</span>
-          </Link>
-          <p className="text-muted-foreground text-center">Create an account to get started.</p>
-        </div>
+        <Link href="/" className="flex flex-col items-center justify-center space-y-4 mb-2 hover:opacity-80 transition-opacity">
+          <img src="/logo.png" alt="JNext Logo" className="w-14 h-14 object-contain rounded-xl drop-shadow-[0_0_20px_rgba(6,182,212,0.6)]" />
+          <span className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">JNext</span>
+        </Link>
+        <p className="text-muted-foreground text-center">Create an account to get started.</p>
 
         <GlassCard className="p-8">
           <form onSubmit={handleSubmit} className="space-y-6">

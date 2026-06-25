@@ -16,6 +16,9 @@ const fontBody = Inter({
 export const metadata: Metadata = {
   title: "JNext - The Ultimate AI Platform",
   description: "All-in-one AI platform for Chat, Coding, Images, Video, and more.",
+  icons: {
+    icon: "/logo.png",
+  }
 };
 
 export default function RootLayout({

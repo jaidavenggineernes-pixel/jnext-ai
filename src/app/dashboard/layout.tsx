@@ -26,9 +26,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* MOBILE TOPBAR */}
       <div className="md:hidden flex items-center justify-between p-4 border-b border-white/10 bg-black/50 backdrop-blur-md z-40">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
-            <span className="text-white font-bold text-sm">J</span>
-          </div>
+          <img src="/logo.png" alt="JNext Logo" className="w-8 h-8 object-contain rounded-md drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]" />
           <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">JNext</span>
         </Link>
         <button 
@@ -77,9 +75,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <aside className="w-full h-full glass-panel border border-glass-border/40 rounded-3xl flex flex-col overflow-hidden shadow-2xl bg-black/20">
           <div className="h-20 flex items-center px-6 border-b border-white/5">
             <Link href="/" className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
-                <span className="text-white font-bold text-sm">J</span>
-              </div>
+              <img src="/logo.png" alt="JNext Logo" className="w-8 h-8 object-contain rounded-md drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]" />
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">JNext</span>
             </Link>
           </div>

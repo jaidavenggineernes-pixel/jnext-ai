@@ -12,8 +12,8 @@ export default function Home() {
       <header className="fixed top-0 w-full z-50 glass-panel border-b border-glass-border/40 rounded-none bg-glass-bg/60">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Sparkles className="w-6 h-6 text-primary" />
-            <span className="text-xl font-bold tracking-tight">JNext</span>
+            <img src="/logo.png" alt="JNext Logo" className="w-8 h-8 object-contain rounded-md drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]" />
+            <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">JNext</span>
           </div>
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
             <Link href="#features" className="hover:text-primary transition-colors">Features</Link>

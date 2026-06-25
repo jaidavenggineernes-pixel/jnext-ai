@@ -215,8 +215,9 @@ export default function PricingPage() {
 
       {/* Navigation (Simple) */}
       <nav className="relative z-10 max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-600">
-          JNext
+        <Link href="/" className="flex items-center space-x-3">
+          <img src="/logo.png" alt="JNext Logo" className="w-8 h-8 object-contain rounded-md drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]" />
+          <span className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-600">JNext</span>
         </Link>
         <Link href="/dashboard">
           <Button variant="outline" className="border-white/10 hover:bg-white/5">Go to Dashboard</Button>
