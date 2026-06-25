@@ -305,43 +305,7 @@ export default function PricingPage() {
         </div>
       </main>
 
-      {/* Checkout Modal */}
-      {checkoutPlan && checkoutPlan.price.monthly > 0 && checkoutPlan.tier !== "STUDENT" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-zinc-900 border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl relative"
-          >
-            <button onClick={() => !isProcessing && setCheckoutPlan(null)} className="absolute top-4 right-4 text-muted-foreground hover:text-white" disabled={isProcessing}>
-              <X className="w-5 h-5" />
-            </button>
-            <h2 className="text-2xl font-bold mb-2">Upgrade to {checkoutPlan.name}</h2>
-            <p className="text-muted-foreground text-sm mb-6">Pilih metode pembayaran (Midtrans)</p>
-            
-            <div className="bg-black/50 rounded-xl p-4 mb-6 border border-white/5">
-              <div className="flex justify-between mb-2 text-sm">
-                <span>Paket {checkoutPlan.name} ({isYearly ? 'Tahunan' : 'Bulanan'})</span>
-                <span>${isYearly ? (checkoutPlan.price.yearly * 12).toFixed(2) : checkoutPlan.price.monthly.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between font-bold text-lg pt-2 border-t border-white/10 mt-2">
-                <span>Total Tagihan</span>
-                <span>${isYearly ? (checkoutPlan.price.yearly * 12).toFixed(2) : checkoutPlan.price.monthly.toFixed(2)}</span>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <Button onClick={() => handlePayment()} disabled={isProcessing} className="w-full h-12 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-400 hover:to-orange-500 text-white font-bold shadow-lg shadow-orange-500/25">
-                {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : "Bayar Sekarang (Midtrans)"}
-              </Button>
-            </div>
-            
-            <p className="text-xs text-center text-muted-foreground mt-4">
-              *Aplikasi mendukung GoPay, ShopeePay, DANA, QRIS, Virtual Account, dan Kartu Kredit.
-            </p>
-          </motion.div>
-        </div>
-      )}
+      {/* Checkout Modal has been replaced by ManualCheckoutModal */}
       
       {/* Student Verification Modal */}
       {checkoutPlan && checkoutPlan.tier === "STUDENT" && (
