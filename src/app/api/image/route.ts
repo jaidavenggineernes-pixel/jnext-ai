@@ -2,7 +2,7 @@ import { HfInference } from "@huggingface/inference";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { google } from "@ai-sdk/google";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateText } from "ai";
 
 export const maxDuration = 60; // Image generation can take up to 60s
@@ -57,8 +57,13 @@ export async function POST(req: Request) {
 
     // Advanced Prompt Engineering using Gemini
     // Translate from Indonesian/any language to English and expand into a highly descriptive 50-word prompt
+    const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+    const googleProvider = createGoogleGenerativeAI({
+      apiKey: apiKey,
+    });
+
     const { text: enhancedByGemini } = await generateText({
-      model: google("gemini-1.5-flash"),
+      model: googleProvider("gemini-1.5-flash"),
       system: `You are an expert midjourney prompt engineer. The user will give you a short idea or prompt (which might be in Indonesian). 
       Your job is to translate it to English and expand it into a highly detailed, cinematic, hyper-realistic image generation prompt.
       Describe the subject, lighting, atmosphere, camera angle, and textures. Keep it under 50 words. Only output the final English prompt string, no markdown, no quotes, no conversational text.`,

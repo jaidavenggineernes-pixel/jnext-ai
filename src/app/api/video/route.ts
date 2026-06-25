@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { google } from "@ai-sdk/google";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateText } from "ai";
 
 export const maxDuration = 60; // Up to 60s
@@ -29,8 +29,13 @@ export async function POST(req: Request) {
     }
 
     // Advanced Prompt Engineering using Gemini for Video Generation base image
+    const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+    const googleProvider = createGoogleGenerativeAI({
+      apiKey: apiKey,
+    });
+
     const { text: enhancedByGemini } = await generateText({
-      model: google("gemini-1.5-flash"),
+      model: googleProvider("gemini-1.5-flash"),
       system: `You are an expert cinematic director and prompt engineer. The user will give you a scene description (might be in Indonesian). 
       Translate it to English and expand it into a highly detailed, cinematic, dynamic shot description suitable for an opening movie scene.
       Emphasize motion, dynamic lighting, depth of field, and photorealism. Keep it under 50 words. Only output the final English prompt string, no markdown.`,
