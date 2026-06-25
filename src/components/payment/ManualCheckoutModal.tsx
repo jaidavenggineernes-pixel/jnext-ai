@@ -87,12 +87,9 @@ export function ManualCheckoutModal({ isOpen, onClose, planName, amount, isYearl
                   <h3 className="font-semibold flex items-center text-sm uppercase tracking-wider text-muted-foreground">
                     <QrCode className="w-4 h-4 mr-2" /> Opsi 1: Scan QRIS
                   </h3>
-                  <div className="bg-white p-4 rounded-xl flex flex-col items-center justify-center space-y-3">
-                    {/* Ganti src="/qris.png" dengan gambar QRIS Anda jika ada */}
-                    <div className="w-48 h-48 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-sm font-medium text-center p-4">
-                      Taruh file qris.png<br/>di folder public
-                    </div>
-                    <p className="text-xs font-medium text-black">A.N. JNEXT AI INDONESIA</p>
+                  <div className="bg-white p-4 rounded-xl flex flex-col items-center justify-center space-y-3 shadow-inner">
+                    <img src="/qris.jpg" alt="QRIS JAIDAV" className="w-full max-w-[200px] h-auto object-contain rounded-lg border-2 border-gray-100" />
+                    <p className="text-xs font-bold text-black mt-2">A.N. JAIDAV</p>
                   </div>
                 </div>
 
