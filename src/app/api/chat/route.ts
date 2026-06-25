@@ -118,9 +118,32 @@ export async function POST(req: Request) {
       apiKey: apiKey,
     });
 
+    const coreMessages = messages.map((msg: any) => {
+      if (msg.role === 'user' && msg.attachments && msg.attachments.length > 0) {
+        return {
+          role: 'user',
+          content: [
+            { type: 'text', text: msg.content || '' },
+            ...msg.attachments.map((att: any) => {
+              // Vercel AI SDK Core requires the data URL or base64 for images
+              if (att.mimeType.startsWith('image/')) {
+                return { type: 'image', image: att.url };
+              } else {
+                return { type: 'file', data: att.url, mimeType: att.mimeType };
+              }
+            })
+          ]
+        };
+      }
+      return {
+        role: msg.role,
+        content: msg.content
+      };
+    });
+
     const result = streamText({
       model: googleProvider('gemini-2.5-flash'),
-      messages,
+      messages: coreMessages,
       system: `You are JNext, an elite AI assistant and world-class senior software engineer created by JAIDAV. 
 You possess deep, comprehensive knowledge of all programming languages, frameworks, and computer science concepts. 
 Your goal is to provide the most optimal, secure, and elegant solutions. 

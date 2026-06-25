@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, Loader2, Copy, Check } from "lucide-react";
+import { Send, Bot, User, Loader2, Copy, Check, Paperclip, X, Video } from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -11,7 +11,8 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { motion } from "framer-motion";
 
-type Message = { id: string; role: "user" | "assistant"; content: string };
+type Attachment = { url: string; mimeType: string; name: string };
+type Message = { id: string; role: "user" | "assistant"; content: string; attachments?: Attachment[] };
 
 const CodeBlock = ({ inline, className, children, ...props }: any) => {
   const [isCopied, setIsCopied] = useState(false);
@@ -61,7 +62,31 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<Attachment | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 4 * 1024 * 1024) {
+      alert("Ukuran file maksimal adalah 4MB untuk menjaga kestabilan sistem.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setSelectedFile({
+        url: e.target?.result as string,
+        mimeType: file.type,
+        name: file.name
+      });
+    };
+    reader.readAsDataURL(file);
+    // Reset input value so same file can be selected again if removed
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -69,13 +94,19 @@ export default function ChatPage() {
 
   const onFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if ((!input.trim() && !selectedFile) || isLoading) return;
     
-    const userMessage: Message = { id: Date.now().toString(), role: "user", content: input };
+    const userMessage: Message = { 
+      id: Date.now().toString(), 
+      role: "user", 
+      content: input,
+      attachments: selectedFile ? [selectedFile] : undefined
+    };
     const newMessages = [...messages, userMessage];
     
     setMessages(newMessages);
     setInput("");
+    setSelectedFile(null);
     setIsLoading(true);
 
     try {
@@ -181,6 +212,19 @@ export default function ChatPage() {
                       : "bg-primary text-primary-foreground shadow-[0_4px_20px_rgba(6,182,212,0.2)] rounded-br-sm"
                   }`}
                 >
+                  {message.attachments && message.attachments.length > 0 && (
+                    <div className="mb-3 flex flex-wrap gap-2">
+                      {message.attachments.map((att, i) => (
+                        att.mimeType.startsWith('image/') ? (
+                          <img key={i} src={att.url} alt="attachment" className="h-32 sm:h-48 rounded-xl object-cover border border-white/20 shadow-lg" />
+                        ) : (
+                          <div key={i} className="h-16 px-4 rounded-xl bg-black/20 flex items-center justify-center border border-white/20 text-xs shadow-inner">
+                            <Video className="w-4 h-4 mr-2" /> {att.name}
+                          </div>
+                        )
+                      ))}
+                    </div>
+                  )}
                   <div className={`prose prose-sm dark:prose-invert max-w-none ${message.role === "user" ? "text-white prose-p:text-white" : ""}`}>
                     <ReactMarkdown 
                       remarkPlugins={[remarkGfm]}
@@ -219,10 +263,44 @@ export default function ChatPage() {
         </div>
 
         <div className="p-4 border-t border-glass-border/40 bg-glass-bg/50">
+          {selectedFile && (
+            <div className="mb-4 relative inline-block p-1 bg-white/5 rounded-xl border border-white/10">
+              {selectedFile.mimeType.startsWith('image/') ? (
+                <img src={selectedFile.url} alt="Preview" className="h-20 w-auto rounded-lg object-cover" />
+              ) : (
+                <div className="h-20 px-4 rounded-lg bg-black/40 flex items-center justify-center text-xs text-muted-foreground border border-white/5">
+                  <Video className="w-4 h-4 mr-2" /> {selectedFile.name}
+                </div>
+              )}
+              <button 
+                onClick={() => setSelectedFile(null)}
+                className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1 text-white hover:bg-red-600 shadow-lg"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          )}
           <form
             onSubmit={onFormSubmit}
             className="flex items-center space-x-2"
           >
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              className="hidden" 
+              accept="image/*,video/mp4,video/webm"
+              onChange={handleFileChange}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="bg-white/5 border-white/10 text-muted-foreground hover:text-white shrink-0 rounded-xl"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isLoading}
+            >
+              <Paperclip className="w-4 h-4" />
+            </Button>
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -233,8 +311,8 @@ export default function ChatPage() {
             <Button
               type="submit"
               size="icon"
-              disabled={isLoading || !input.trim()}
-              className="bg-primary hover:bg-primary/90 rounded-xl"
+              disabled={isLoading || (!input.trim() && !selectedFile)}
+              className="bg-primary hover:bg-primary/90 rounded-xl shrink-0"
             >
               <Send className="w-4 h-4" />
             </Button>
