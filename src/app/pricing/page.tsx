@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Script from "next/script";
+import { ManualCheckoutModal } from "@/components/payment/ManualCheckoutModal";
 
 // Declare global snap object
 declare global {
@@ -152,62 +152,23 @@ export default function PricingPage() {
     if (!checkoutPlan) return;
     setIsProcessing(true);
 
-    try {
-      const amount = isYearly ? checkoutPlan.price.yearly * 12 : checkoutPlan.price.monthly;
-      
-      const res = await fetch("/api/payment/midtrans", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tier: checkoutPlan.tier,
-          amount: amount,
-          isYearly: isYearly,
-          planName: checkoutPlan.name
-        })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.error || "Payment failed");
-
-      // Trigger Midtrans Snap Popup
-      window.snap.pay(data.token, {
-        onSuccess: async function (result: any) {
-          console.log("Success:", result);
-          alert("Pembayaran Berhasil! Sistem mendeteksi dana Anda. Harap refresh halaman.");
-          await updateSession();
-          router.push("/dashboard/billing");
-          router.refresh();
-        },
-        onPending: function (result: any) {
-          console.log("Pending:", result);
-          alert("Menunggu pembayaran Anda...");
-          setCheckoutPlan(null);
-          setIsProcessing(false);
-        },
-        onError: function (result: any) {
-          console.log("Error:", result);
-          alert("Pembayaran Gagal.");
-          setCheckoutPlan(null);
-          setIsProcessing(false);
-        },
-        onClose: function () {
-          alert("Anda menutup jendela pembayaran sebelum menyelesaikan transaksi.");
-          setCheckoutPlan(null);
-          setIsProcessing(false);
-        }
-      });
-      
-    } catch (error: any) {
-      console.error(error);
-      alert(error.message || "Terjadi kesalahan saat membuat transaksi Midtrans.");
-      setIsProcessing(false);
-    }
+    // Buka Manual Checkout Modal
+    // Kita biarkan isProcessing bernilai true saat modal terbuka (atau false tergantung logic)
+    // Di sini kita biarkan terbuka, modal dirender berdasarkan checkoutPlan 
+    setIsProcessing(false);
   };
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-orange-500/30 overflow-hidden relative pb-32">
-      <Script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || "YOUR_CLIENT_KEY"} strategy="beforeInteractive" />
+      {checkoutPlan && (
+        <ManualCheckoutModal
+          isOpen={!!checkoutPlan}
+          onClose={() => setCheckoutPlan(null)}
+          planName={checkoutPlan.name}
+          amount={isYearly ? checkoutPlan.price.yearly * 12 : checkoutPlan.price.monthly}
+          isYearly={isYearly}
+        />
+      )}
       {/* Background Gradients */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[500px] bg-orange-500/20 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
