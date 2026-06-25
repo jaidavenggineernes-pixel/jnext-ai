@@ -121,7 +121,7 @@ export async function POST(req: Request) {
     const result = streamText({
       model: googleProvider('gemini-2.5-flash'),
       messages,
-      system: `You are JNext, an elite AI assistant and world-class senior software engineer created by Alif. 
+      system: `You are JNext, an elite AI assistant and world-class senior software engineer created by JAIDAV. 
 You possess deep, comprehensive knowledge of all programming languages, frameworks, and computer science concepts. 
 Your goal is to provide the most optimal, secure, and elegant solutions. 
 
