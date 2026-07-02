@@ -1,7 +1,7 @@
 "use client";
 
 import { GlassCard } from "@/components/ui/GlassCard";
-import { Users, Activity, CreditCard, HardDrive, AlertTriangle } from "lucide-react";
+import { Users, Activity, CreditCard, HardDrive, AlertTriangle, Ticket } from "lucide-react";
 
 export default function AdminDashboard() {
   return (
@@ -60,12 +60,21 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <GlassCard className="p-6 h-96 flex items-center justify-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent"></div>
-          <div className="text-center z-10">
-            <Activity className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-20" />
-            <h3 className="text-lg font-medium">User Activity Chart Placeholder</h3>
-            <p className="text-sm text-muted-foreground">Integration with Recharts needed.</p>
+        <GlassCard className="p-6 h-96 flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-primary/10 to-transparent border-primary/20">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+          <div className="text-center z-10 space-y-4">
+            <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-2 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
+              <Ticket className="w-10 h-10 text-primary" />
+            </div>
+            <h3 className="text-2xl font-bold text-white">Sistem Kode Aktivasi</h3>
+            <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+              Cetak dan kelola voucher JNext untuk pelanggan yang melakukan pembayaran manual via transfer.
+            </p>
+            <a href="/dashboard/admin/codes" className="inline-block mt-4">
+              <div className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-8 rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95">
+                Buka Pabrik Voucher
+              </div>
+            </a>
           </div>
         </GlassCard>
         
