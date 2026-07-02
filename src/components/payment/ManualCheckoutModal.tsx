@@ -131,8 +131,10 @@ export function ManualCheckoutModal({ isOpen, onClose, planName, amount, isYearl
                 </div>
               </div>
 
-              {/* Footer / CTA */}
               <div className="p-6 border-t border-white/5 bg-black/50">
+                <div className="mb-4 p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-300 text-center">
+                  Setelah transfer, klik tombol di bawah untuk mengirim bukti ke Admin. Anda akan menerima <strong>Kode Aktivasi</strong> untuk dimasukkan di menu Billing agar akun otomatis Upgrade.
+                </div>
                 <Button 
                   onClick={handleWhatsAppConfirm}
                   className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-lg shadow-green-900/20 text-md font-bold"

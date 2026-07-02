@@ -5,9 +5,10 @@ export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/Button";
-import { CreditCard, GraduationCap, HardDrive, MessageSquare, Zap, Upload, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { CreditCard, GraduationCap, HardDrive, MessageSquare, Zap, Upload, CheckCircle2, XCircle, Clock, Ticket } from "lucide-react";
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
+import { RedeemCodeForm } from "@/components/payment/RedeemCodeForm";
 
 async function submitStudentVerification(formData: FormData) {
   "use server";
@@ -52,7 +53,7 @@ export default async function BillingDashboardPage() {
 
   // Define tier limits to calculate percentage
   const tierLimits: any = {
-    "FREE": { words: 1000, storage: 1 }, // 1GB
+    "FREE": { words: 300, storage: 1 }, // 1GB
     "STUDENT": { words: 5500, storage: 10 },
     "PLUS": { words: 8900, storage: 25 },
     "PRO": { words: 11000, storage: 50 },
@@ -79,6 +80,25 @@ export default async function BillingDashboardPage() {
         
         {/* Current Plan Card */}
         <div className="lg:col-span-2 space-y-6">
+          <GlassCard className="p-6 relative overflow-hidden bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border-indigo-500/20">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Ticket className="w-24 h-24" />
+            </div>
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400">
+                  <Ticket className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white">Punya Kode Aktivasi?</h3>
+                  <p className="text-sm text-muted-foreground">Tukar kode dari Admin untuk Upgrade otomatis</p>
+                </div>
+              </div>
+              
+              <RedeemCodeForm />
+            </div>
+          </GlassCard>
+
           <GlassCard className="p-8 border-orange-500/20 bg-gradient-to-br from-orange-500/5 to-transparent relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
               <Zap className="w-48 h-48" />

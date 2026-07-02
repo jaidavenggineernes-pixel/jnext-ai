@@ -40,6 +40,7 @@ model User {
   subscriptions Subscription[]
   studentVerifs StudentVerification[]
   invoices      SubscriptionInvoice[]
+  activationCodes ActivationCode[]
 }
 
 model StudentVerification {
@@ -166,4 +167,16 @@ model Subscription {
   updatedAt            DateTime @updatedAt
 
   user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ActivationCode {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  tier      String   // PLUS, PRO, EXPERT, PREMIUM
+  isUsed    Boolean  @default(false)
+  usedById  String?
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  usedBy    User?    @relation(fields: [usedById], references: [id])
 }
