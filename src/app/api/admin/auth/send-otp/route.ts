@@ -9,6 +9,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Email dan Nomor WhatsApp wajib diisi" }, { status: 400 });
     }
 
+    // PENGATURAN KEAMANAN EKSTRA: Hanya Izinkan Master Email
+    if (email.toLowerCase().trim() !== "jaidav.enggineernes@gmail.com") {
+      return NextResponse.json({ error: "Akses ditolak: Email ini bukan merupakan Master Admin." }, { status: 403 });
+    }
+
     // Cek apakah user adalah ADMIN di database
     const user = await prisma.user.findUnique({
       where: { email: email.toLowerCase().trim() }

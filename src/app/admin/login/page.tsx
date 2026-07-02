@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 export default function AdminLoginPage() {
   const router = useRouter();
   const [step, setStep] = useState<"phone" | "otp">("phone");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("jaidav.enggineernes@gmail.com");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
@@ -121,7 +121,9 @@ export default function AdminLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="email@domain.com"
-                  className="bg-white/5 border-white/10 text-white h-12"
+                  className="bg-white/5 border-white/10 text-white/50 h-12 cursor-not-allowed"
+                  disabled
+                  readOnly
                   required
                 />
               </div>
