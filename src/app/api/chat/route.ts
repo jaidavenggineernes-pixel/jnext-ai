@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 export const maxDuration = 60; // 60 seconds
 
 const TIER_WORD_LIMITS: any = {
-  "FREE": 1000,
+  "FREE": 300,
   "STUDENT": 5500,
   "PLUS": 8900,
   "PRO": 11000,
@@ -63,6 +63,17 @@ export async function POST(req: Request) {
           return new Response(JSON.stringify(
             { error: `You have reached your daily limit of ${wordLimit.toLocaleString()} words on the JNext ${dbUser.tier} plan. Please upgrade your subscription to continue.` }
           ), { status: 403, headers: { 'Content-Type': 'application/json' } });
+        }
+
+        // Block multimodal features for FREE users
+        const hasImages = messages.some((m: any) => 
+          (Array.isArray(m.content) && m.content.some((c: any) => c.type === 'image' || c.type === 'file')) ||
+          (m.attachments && m.attachments.length > 0)
+        );
+        if (hasImages && dbUser.tier === "FREE") {
+          return new Response(JSON.stringify({ 
+            error: "Image and File Analysis is not available on the Free plan. Please upgrade to JNext GO Student or higher to unlock Multimodal AI." 
+          }), { status: 403, headers: { 'Content-Type': 'application/json' } });
         }
 
         // Increment word count for the prompt

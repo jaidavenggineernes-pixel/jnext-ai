@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     }
 
     const TIER_IMAGE_LIMITS: any = {
-      "FREE": 3,
+      "FREE": 1,
       "STUDENT": 50,
       "PLUS": 100,
       "PRO": 200,

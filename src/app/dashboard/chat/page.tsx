@@ -116,7 +116,15 @@ export default function ChatPage() {
         body: JSON.stringify({ messages: newMessages })
       });
 
-      if (!response.ok) throw new Error("Failed to connect to API");
+      if (!response.ok) {
+        let errMsg = "Failed to connect to API";
+        try {
+          const errData = await response.json();
+          if (errData.error) errMsg = errData.error;
+        } catch (e) {}
+        throw new Error(errMsg);
+      }
+      
       if (!response.body) throw new Error("No response body");
 
       const reader = response.body.getReader();
