@@ -24,6 +24,7 @@ export default function AdminCodesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedTier, setSelectedTier] = useState("PLUS");
+  const [customerPhone, setCustomerPhone] = useState("");
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   useEffect(() => {
@@ -51,9 +52,10 @@ export default function AdminCodesPage() {
       const res = await fetch("/api/admin/codes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tier: selectedTier })
+        body: JSON.stringify({ tier: selectedTier, phone: customerPhone })
       });
       if (res.ok) {
+        setCustomerPhone("");
         fetchCodes();
       }
     } catch (error) {
@@ -98,6 +100,18 @@ export default function AdminCodesPage() {
               <option className="bg-background" value="EXPERT">EXPERT</option>
               <option className="bg-background" value="PREMIUM">PREMIUM</option>
             </select>
+          </div>
+          <div className="flex-1 min-w-[200px]">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
+              No. WA Pelanggan (Opsional)
+            </label>
+            <input 
+              type="tel"
+              value={customerPhone}
+              onChange={(e) => setCustomerPhone(e.target.value)}
+              placeholder="08123..."
+              className="w-full h-[46px] bg-black/40 border border-white/10 rounded-xl px-4 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            />
           </div>
           <Button 
             onClick={generateCode} 

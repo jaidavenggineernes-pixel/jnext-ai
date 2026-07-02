@@ -4,7 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, QrCode, Smartphone, ExternalLink, ShieldCheck, Check } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { GlassCard } from "@/components/ui/GlassCard";
-import { useState } from "react";
+import { Input } from "@/components/ui/Input";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 interface ManualCheckoutModalProps {
   isOpen: boolean;
@@ -15,7 +17,16 @@ interface ManualCheckoutModalProps {
 }
 
 export function ManualCheckoutModal({ isOpen, onClose, planName, amount, isYearly }: ManualCheckoutModalProps) {
+  const { data: session } = useSession();
   const [copied, setCopied] = useState<string | null>(null);
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      setCustomerEmail(session.user.email);
+    }
+  }, [session]);
 
   // --- ⚠️ PENGATURAN PEMBAYARAN MANUAL (UBAH DI SINI) ⚠️ ---
   const WHATSAPP_NUMBER = "6285191219129"; // Ganti dengan nomor WhatsApp Anda (Gunakan 62, hilangkan angka 0 di depan)
@@ -32,8 +43,19 @@ export function ManualCheckoutModal({ isOpen, onClose, planName, amount, isYearl
   };
 
   const handleWhatsAppConfirm = () => {
+    if (!customerEmail || !customerPhone) {
+      alert("Mohon isi Email dan Nomor WhatsApp Anda terlebih dahulu agar kami bisa mengirimkan kode voucher.");
+      return;
+    }
+
     const formattedAmount = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(amount * 16000);
-    const message = `Halo Admin JNext, saya ingin mengaktifkan paket *${planName} (${isYearly ? "Tahunan" : "Bulanan"})* seharga *${formattedAmount}*.\n\nBerikut adalah foto bukti transfer saya:`;
+    const message = `Halo Admin JNext, saya ingin mengaktifkan paket *${planName} (${isYearly ? "Tahunan" : "Bulanan"})* seharga *${formattedAmount}*.
+
+*Data Pelanggan:*
+- Email: ${customerEmail}
+- WA: ${customerPhone}
+
+Berikut adalah foto bukti transfer saya:`;
     
     const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(waUrl, "_blank");
@@ -132,8 +154,33 @@ export function ManualCheckoutModal({ isOpen, onClose, planName, amount, isYearl
               </div>
 
               <div className="p-6 border-t border-white/5 bg-black/50">
+                <div className="mb-4 space-y-3">
+                  <div className="space-y-1">
+                    <label className="text-xs text-muted-foreground font-medium">Email Anda (Untuk Menerima Voucher)</label>
+                    <Input 
+                      type="email" 
+                      placeholder="email@domain.com" 
+                      value={customerEmail}
+                      onChange={(e) => setCustomerEmail(e.target.value)}
+                      className="bg-black/40 border-white/10 text-white"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-muted-foreground font-medium">Nomor WhatsApp Anda</label>
+                    <Input 
+                      type="tel" 
+                      placeholder="08123456789" 
+                      value={customerPhone}
+                      onChange={(e) => setCustomerPhone(e.target.value)}
+                      className="bg-black/40 border-white/10 text-white"
+                      required
+                    />
+                  </div>
+                </div>
+                
                 <div className="mb-4 p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-300 text-center">
-                  Setelah transfer, klik tombol di bawah untuk mengirim bukti ke Admin. Anda akan menerima <strong>Kode Aktivasi</strong> untuk dimasukkan di menu Billing agar akun otomatis Upgrade.
+                  Setelah transfer, klik tombol di bawah untuk mengirim bukti ke Admin. Anda akan menerima <strong>Kode Aktivasi</strong> yang dikirim otomatis ke WA Anda.
                 </div>
                 <Button 
                   onClick={handleWhatsAppConfirm}

@@ -59,7 +59,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Forbidden: Admin access required" }, { status: 403 });
     }
 
-    const { tier } = await req.json();
+    const { tier, phone } = await req.json();
 
     if (!tier || !['STUDENT', 'PLUS', 'PRO', 'EXPERT', 'PREMIUM'].includes(tier)) {
       return NextResponse.json({ error: "Invalid tier provided" }, { status: 400 });
@@ -73,6 +73,42 @@ export async function POST(req: Request) {
         tier: tier,
       }
     });
+
+    // AUTO DELIVERY VIA WHATSAPP (FONNTE)
+    if (phone) {
+      const fonnteToken = process.env.FONNTE_TOKEN || "cYGwRZAU1LNt2gZeFBgf";
+      if (fonnteToken) {
+        // Clean phone number (remove non-digits)
+        const cleanPhone = phone.replace(/[^0-9]/g, "");
+        
+        const waMessage = `🎉 *PEMBAYARAN BERHASIL!* 🎉
+
+Halo Kak! Terima kasih telah berlangganan paket *${tier}* di JNext. 
+
+Berikut adalah *Kode Aktivasi* rahasia Anda:
+👉 *${codeString}*
+
+*Cara Menggunakannya:*
+1. Buka website JNext dan Login.
+2. Pergi ke menu *Billing* di Dashboard.
+3. Masukkan kode di atas pada kolom "Punya Kode Aktivasi?".
+4. Klik Klaim, dan akun Anda akan otomatis ter-upgrade! 🚀
+
+Selamat menikmati fitur premium JNext! ✨`;
+
+        await fetch("https://api.fonnte.com/send", {
+          method: "POST",
+          headers: {
+            "Authorization": fonnteToken,
+          },
+          body: new URLSearchParams({
+            target: cleanPhone,
+            message: waMessage,
+            countryCode: "62",
+          })
+        }).catch(err => console.error("Fonnte delivery error:", err));
+      }
+    }
 
     return NextResponse.json({ code: newCode });
   } catch (error) {
