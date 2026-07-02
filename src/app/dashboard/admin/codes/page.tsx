@@ -28,7 +28,7 @@ export default function AdminCodesPage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/dashboard");
+      router.push("/auth/login");
     } else if (status === "authenticated") {
       fetchCodes();
     }
