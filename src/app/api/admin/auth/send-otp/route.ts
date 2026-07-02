@@ -46,9 +46,9 @@ export async function POST(req: Request) {
     console.log(`Berlaku 5 menit.`);
     console.log(`========================================\n`);
 
-    /*
-    // Contoh implementasi Fonnte asli (uncomment jika sudah ada token)
-    const fonnteToken = process.env.FONNTE_TOKEN;
+    // Panggilan API Fonnte asli
+    const fonnteToken = process.env.FONNTE_TOKEN || "cYGwRZAU1LNt2gZeFBgf";
+    
     if (fonnteToken) {
       await fetch("https://api.fonnte.com/send", {
         method: "POST",
@@ -62,7 +62,6 @@ export async function POST(req: Request) {
         })
       });
     }
-    */
 
     return NextResponse.json({ success: true, message: "OTP berhasil dikirim ke WhatsApp Anda" });
 
