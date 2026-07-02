@@ -34,13 +34,19 @@ export async function POST(req: Request) {
       apiKey: apiKey,
     });
 
-    const { text: enhancedByGemini } = await generateText({
-      model: googleProvider("gemini-1.5-flash"),
-      system: `You are an expert cinematic director and prompt engineer. The user will give you a scene description (might be in Indonesian). 
-      Translate it to English and expand it into a highly detailed, cinematic, dynamic shot description suitable for an opening movie scene.
-      Emphasize motion, dynamic lighting, depth of field, and photorealism. Keep it under 50 words. Only output the final English prompt string, no markdown.`,
-      prompt: prompt,
-    });
+    let enhancedByGemini = prompt;
+    try {
+      const { text } = await generateText({
+        model: googleProvider("gemini-1.5-flash"),
+        system: `You are an expert cinematic director and prompt engineer. The user will give you a scene description (might be in Indonesian). 
+        Translate it to English and expand it into a highly detailed, cinematic, dynamic shot description suitable for an opening movie scene.
+        Emphasize motion, dynamic lighting, depth of field, and photorealism. Keep it under 50 words. Only output the final English prompt string, no markdown.`,
+        prompt: prompt,
+      });
+      if (text) enhancedByGemini = text;
+    } catch (geminiError) {
+      console.error("Gemini video enhancement failed, using raw prompt:", geminiError);
+    }
 
     const seed = Math.floor(Math.random() * 1000000);
     const enhancedPrompt = `${enhancedByGemini.trim()}, motion blur, dynamic angle, cinematic film still, epic composition, 8k resolution, highly detailed, award-winning cinematography`;

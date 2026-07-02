@@ -62,13 +62,19 @@ export async function POST(req: Request) {
       apiKey: apiKey,
     });
 
-    const { text: enhancedByGemini } = await generateText({
-      model: googleProvider("gemini-1.5-flash"),
-      system: `You are an expert midjourney prompt engineer. The user will give you a short idea or prompt (which might be in Indonesian). 
-      Your job is to translate it to English and expand it into a highly detailed, cinematic, hyper-realistic image generation prompt.
-      Describe the subject, lighting, atmosphere, camera angle, and textures. Keep it under 50 words. Only output the final English prompt string, no markdown, no quotes, no conversational text.`,
-      prompt: prompt,
-    });
+    let enhancedByGemini = prompt; // Default to raw prompt if Gemini fails
+    try {
+      const { text } = await generateText({
+        model: googleProvider("gemini-1.5-flash"),
+        system: `You are an expert midjourney prompt engineer. The user will give you a short idea or prompt (which might be in Indonesian). 
+        Your job is to translate it to English and expand it into a highly detailed, cinematic, hyper-realistic image generation prompt.
+        Describe the subject, lighting, atmosphere, camera angle, and textures. Keep it under 50 words. Only output the final English prompt string, no markdown, no quotes, no conversational text.`,
+        prompt: prompt,
+      });
+      if (text) enhancedByGemini = text;
+    } catch (geminiError) {
+      console.error("Gemini enhancement failed, using raw prompt:", geminiError);
+    }
 
     const seed = Math.floor(Math.random() * 1000000);
     
@@ -112,25 +118,29 @@ export async function POST(req: Request) {
       });
 
       console.log("Generating image with Replicate SDXL...");
-      // For stability-ai/sdxl, the output is an array of image URLs
-      const output = await replicate.run(
-        "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
-        {
-          input: {
-            prompt: finalPrompt,
-            negative_prompt: negativePrompt || "",
-            width: width,
-            height: height,
-            scheduler: "K_EULER",
-            num_outputs: 1,
-            guidance_scale: 7.5,
-            num_inference_steps: 50
+      try {
+        // For stability-ai/sdxl, the output is an array of image URLs
+        const output = await replicate.run(
+          "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
+          {
+            input: {
+              prompt: finalPrompt,
+              negative_prompt: negativePrompt || "",
+              width: width,
+              height: height,
+              scheduler: "K_EULER",
+              num_outputs: 1,
+              guidance_scale: 7.5,
+              num_inference_steps: 50
+            }
           }
+        );
+        
+        if (Array.isArray(output) && output.length > 0) {
+          finalImageUrl = output[0]; // SDXL returns an array of URLs
         }
-      );
-      
-      if (Array.isArray(output) && output.length > 0) {
-        finalImageUrl = output[0]; // SDXL returns an array of URLs
+      } catch (err) {
+        console.error("Replicate Image Error:", err);
       }
     } 
 
