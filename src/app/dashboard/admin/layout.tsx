@@ -7,7 +7,7 @@ export default async function AdminDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const sessionToken = cookieStore.get("admin_session")?.value;
 
   if (!sessionToken) {

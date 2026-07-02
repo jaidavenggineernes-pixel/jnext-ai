@@ -45,7 +45,8 @@ export async function POST(req: Request) {
     });
 
     // Set HttpOnly Cookie untuk keamanan ekstra
-    cookies().set("admin_session", sessionToken, {
+    const cookieStore = await cookies();
+    cookieStore.set("admin_session", sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
