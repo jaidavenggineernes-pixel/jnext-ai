@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     console.log(`========================================\n`);
 
     // Panggilan API Fonnte asli
-    const fonnteToken = process.env.FONNTE_TOKEN || "cYGwRZAU1LNt2gZeFBgf";
+    const fonnteToken = process.env.FONNTE_TOKEN || "GtBGmrsbzusnuSGXDyhG";
     
     if (fonnteToken) {
       await fetch("https://api.fonnte.com/send", {

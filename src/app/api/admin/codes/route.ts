@@ -76,7 +76,7 @@ export async function POST(req: Request) {
 
     // AUTO DELIVERY VIA WHATSAPP (FONNTE)
     if (phone) {
-      const fonnteToken = process.env.FONNTE_TOKEN || "cYGwRZAU1LNt2gZeFBgf";
+      const fonnteToken = process.env.FONNTE_TOKEN || "GtBGmrsbzusnuSGXDyhG";
       if (fonnteToken) {
         // Clean phone number (remove non-digits)
         const cleanPhone = phone.replace(/[^0-9]/g, "");
