@@ -27,7 +27,7 @@ export default function AdminCodesPage() {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status === "unauthenticated" || (session?.user as any)?.role !== "ADMIN") {
+    if (status === "unauthenticated") {
       router.push("/dashboard");
     } else if (status === "authenticated") {
       fetchCodes();
