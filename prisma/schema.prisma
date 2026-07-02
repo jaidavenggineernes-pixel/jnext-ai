@@ -180,3 +180,21 @@ model ActivationCode {
 
   usedBy    User?    @relation(fields: [usedById], references: [id])
 }
+
+model AdminOTP {
+  id        String   @id @default(cuid())
+  email     String
+  phone     String
+  code      String
+  expiresAt DateTime
+  isUsed    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model AdminSession {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

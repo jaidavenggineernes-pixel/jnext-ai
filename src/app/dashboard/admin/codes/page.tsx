@@ -27,9 +27,7 @@ export default function AdminCodesPage() {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/auth/login");
-    } else if (status === "authenticated") {
+    if (status === "authenticated") {
       fetchCodes();
     }
   }, [status, session]);
