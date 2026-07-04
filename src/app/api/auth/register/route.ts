@@ -4,34 +4,57 @@ import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password } = await req.json();
+    const { name, email, password, otp } = await req.json();
 
-    if (!email || !password) {
+    if (!email || !password || !name || !otp) {
       return NextResponse.json(
-        { error: "Email and password are required." },
+        { error: "Nama, email, password, dan OTP wajib diisi." },
         { status: 400 }
       );
     }
 
     if (password.length < 8) {
       return NextResponse.json(
-        { error: "Password must be at least 8 characters long." },
+        { error: "Password minimal 8 karakter." },
         { status: 400 }
       );
     }
 
-    const existingUser = await prisma.user.findUnique({
+    // 1. Verifikasi OTP
+    const validOTP = await prisma.userOTP.findFirst({
       where: {
-        email,
+        email: email.toLowerCase().trim(),
+        code: otp.trim(),
+        isUsed: false,
+        expiresAt: { gt: new Date() } // Masih berlaku
       },
+      orderBy: { createdAt: "desc" }
+    });
+
+    if (!validOTP) {
+      return NextResponse.json(
+        { error: "Kode OTP salah atau sudah kedaluwarsa." },
+        { status: 400 }
+      );
+    }
+
+    // 2. Cek ulang apakah email sudah terdaftar
+    const existingUser = await prisma.user.findUnique({
+      where: { email: email.toLowerCase().trim() },
     });
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "User with this email already exists." },
+        { error: "User dengan email ini sudah ada." },
         { status: 400 }
       );
     }
+
+    // Tandai OTP sebagai digunakan
+    await prisma.userOTP.update({
+      where: { id: validOTP.id },
+      data: { isUsed: true }
+    });
 
     // Hash the password for security
     const hashedPassword = await bcrypt.hash(password, 12);
