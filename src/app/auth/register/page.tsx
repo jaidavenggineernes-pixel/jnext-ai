@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sparkles, Loader2 } from "lucide-react";
@@ -17,7 +17,7 @@ export default function RegisterPage() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const otpRefs = React.useRef<(HTMLInputElement | null)[]>([]);
+  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
