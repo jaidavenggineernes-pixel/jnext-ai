@@ -66,9 +66,11 @@ export async function POST(req: Request) {
     try {
       const { text } = await generateText({
         model: googleProvider("gemini-1.5-flash"),
-        system: `You are an expert midjourney prompt engineer. The user will give you a short idea or prompt (which might be in Indonesian). 
-        Your job is to translate it to English and expand it into a highly detailed, cinematic, hyper-realistic image generation prompt.
-        Describe the subject, lighting, atmosphere, camera angle, and textures. Keep it under 50 words. Only output the final English prompt string, no markdown, no quotes, no conversational text.`,
+        system: `You are an expert image generation prompt engineer for FLUX AI. The user will give you a prompt in any language. 
+        Translate it to English and rewrite it into a highly descriptive, natural language paragraph. 
+        Describe the exact subjects, their actions, the setting, the lighting, and the mood clearly. 
+        DO NOT use comma-separated keywords like 'masterpiece, 8k, trending on artstation'. Keep it natural and concise (under 60 words). 
+        Only output the final English prompt string, without quotes or conversational text.`,
         prompt: prompt,
       });
       if (text) enhancedByGemini = text;
@@ -80,19 +82,18 @@ export async function POST(req: Request) {
     
     let enhancedPrompt = enhancedByGemini.trim();
     if (style === "Cinematic") {
-      enhancedPrompt = `${enhancedPrompt}, cinematic lighting, highly detailed, dramatic, photorealistic, 8k resolution, shot on Arri Alexa, anamorphic lens flare, award winning cinematography`;
+      enhancedPrompt = `Cinematic movie still, photorealistic: ${enhancedPrompt}`;
     } else if (style === "Anime / Manga") {
-      enhancedPrompt = `${enhancedPrompt}, studio ghibli style, makoto shinkai, anime key visual, vibrant colors, beautiful lighting, highly detailed anime illustration, masterpiece`;
+      enhancedPrompt = `Anime style illustration, high quality: ${enhancedPrompt}`;
     } else if (style === "Digital Art") {
-      enhancedPrompt = `${enhancedPrompt}, trending on artstation, concept art, vibrant, highly detailed digital painting, crisp lines, smooth shading, masterpiece`;
+      enhancedPrompt = `Digital concept art painting: ${enhancedPrompt}`;
     } else if (style === "3D Render") {
-      enhancedPrompt = `${enhancedPrompt}, octane render, unreal engine 5, ray tracing, incredibly detailed 3D, volumetric lighting, 8k textures, masterpiece`;
-    } else {
-      enhancedPrompt = `${enhancedPrompt}, masterpiece, award-winning, best quality, ultra-detailed, 8k resolution, photorealistic, highly detailed`;
+      enhancedPrompt = `High quality 3D render, ray tracing: ${enhancedPrompt}`;
     }
 
+    // Negative prompt doesn't work well directly in FLUX URL, but we can append it as a natural language instruction
     if (negativePrompt) {
-      enhancedPrompt += ` --no ${negativePrompt}`;
+      enhancedPrompt += `. Do not include: ${negativePrompt}`;
     }
 
     const finalPrompt = enhancedPrompt;

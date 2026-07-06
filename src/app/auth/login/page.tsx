@@ -60,13 +60,21 @@ export default function LoginPage() {
         otp: code,
       });
 
+      console.log("Login Response:", res);
+
       if (res?.error) {
-        setError(res.error || "Kode OTP tidak valid");
+        // NextAuth defaults to "CredentialsSignin" if an error is thrown
+        if (res.error === "CredentialsSignin") {
+          setError("Kode OTP salah atau sudah kedaluwarsa.");
+        } else {
+          setError(res.error);
+        }
       } else {
-        router.push("/dashboard");
-        router.refresh();
+        // Gunakan hard redirect untuk memastikan sesi dimuat ulang sepenuhnya
+        window.location.href = "/dashboard";
       }
     } catch (err: any) {
+      console.error("Login Error:", err);
       setError(err.message || "Gagal login. Silakan coba lagi.");
     } finally {
       setIsLoading(false);

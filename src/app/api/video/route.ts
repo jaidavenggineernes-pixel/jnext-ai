@@ -38,9 +38,11 @@ export async function POST(req: Request) {
     try {
       const { text } = await generateText({
         model: googleProvider("gemini-1.5-flash"),
-        system: `You are an expert cinematic director and prompt engineer. The user will give you a scene description (might be in Indonesian). 
-        Translate it to English and expand it into a highly detailed, cinematic, dynamic shot description suitable for an opening movie scene.
-        Emphasize motion, dynamic lighting, depth of field, and photorealism. Keep it under 50 words. Only output the final English prompt string, no markdown.`,
+        system: `You are an expert cinematic director and prompt engineer for FLUX AI. The user will give you a scene description in any language. 
+        Translate it to English and rewrite it into a highly detailed, natural language paragraph describing a dynamic, cinematic shot.
+        Emphasize the exact subjects, the motion, the setting, lighting, and photorealism clearly. 
+        DO NOT use comma-separated keywords like 'masterpiece, 8k, cinematic film still'. Keep it natural and concise (under 60 words). 
+        Only output the final English prompt string.`,
         prompt: prompt,
       });
       if (text) enhancedByGemini = text;
@@ -49,7 +51,7 @@ export async function POST(req: Request) {
     }
 
     const seed = Math.floor(Math.random() * 1000000);
-    const enhancedPrompt = `${enhancedByGemini.trim()}, motion blur, dynamic angle, cinematic film still, epic composition, 8k resolution, highly detailed, award-winning cinematography`;
+    const enhancedPrompt = `Cinematic action shot: ${enhancedByGemini.trim()}`;
     
     let width = 1024;
     let height = 576;
