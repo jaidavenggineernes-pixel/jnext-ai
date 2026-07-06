@@ -22,6 +22,7 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        otp: { label: "OTP", type: "text" }
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
@@ -43,6 +44,31 @@ export const authOptions: NextAuthOptions = {
         if (!isPasswordValid) {
           return null;
         }
+
+        // --- Verifikasi OTP ---
+        if (!credentials.otp) {
+          throw new Error("Kode OTP diperlukan untuk login.");
+        }
+
+        const validOTP = await prisma.userOTP.findFirst({
+          where: {
+            email: credentials.email.toLowerCase().trim(),
+            code: credentials.otp.trim(),
+            isUsed: false,
+            expiresAt: { gt: new Date() }
+          },
+          orderBy: { createdAt: "desc" }
+        });
+
+        if (!validOTP) {
+          throw new Error("Kode OTP salah atau sudah kedaluwarsa.");
+        }
+
+        // Tandai OTP sebagai digunakan
+        await prisma.userOTP.update({
+          where: { id: validOTP.id },
+          data: { isUsed: true }
+        });
 
         return user;
       },
