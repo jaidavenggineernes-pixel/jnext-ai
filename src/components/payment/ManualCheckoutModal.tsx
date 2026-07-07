@@ -76,11 +76,11 @@ Berikut adalah foto bukti transfer saya:`;
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 p-4"
+            className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 p-4 flex flex-col max-h-[100dvh]"
           >
-            <GlassCard className="relative overflow-hidden p-0 border border-white/10 shadow-2xl bg-black/90">
+            <GlassCard className="relative overflow-hidden p-0 border border-white/10 shadow-2xl bg-black/90 flex flex-col max-h-full">
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-white/5 bg-white/5">
+              <div className="flex items-center justify-between p-6 border-b border-white/5 bg-white/5 shrink-0">
                 <div>
                   <h2 className="text-xl font-bold">Pembayaran Manual</h2>
                   <p className="text-sm text-muted-foreground mt-1">
@@ -96,7 +96,7 @@ Berikut adalah foto bukti transfer saya:`;
               </div>
 
               {/* Content */}
-              <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+              <div className="p-6 space-y-6 overflow-y-auto min-h-0 flex-1">
                 
                 <div className="text-center p-4 rounded-xl bg-orange-500/10 border border-orange-500/20">
                   <p className="text-sm text-orange-200 mb-1">Total Tagihan</p>
@@ -153,7 +153,7 @@ Berikut adalah foto bukti transfer saya:`;
                 </div>
               </div>
 
-              <div className="p-6 border-t border-white/5 bg-black/50">
+              <div className="p-6 border-t border-white/5 bg-black/50 shrink-0">
                 <div className="mb-4 space-y-3">
                   <div className="space-y-1">
                     <label className="text-xs text-muted-foreground font-medium">Email Anda (Untuk Menerima Voucher)</label>
