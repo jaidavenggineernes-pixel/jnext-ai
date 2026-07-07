@@ -76,11 +76,11 @@ Berikut adalah foto bukti transfer saya:`;
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 p-4 flex flex-col max-h-[100dvh]"
+            className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 p-4 flex flex-col max-h-[85vh]"
           >
             <GlassCard className="relative overflow-hidden p-0 border border-white/10 shadow-2xl bg-black/90 flex flex-col max-h-full">
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-white/5 bg-white/5 shrink-0">
+              <div className="flex items-center justify-between p-4 border-b border-white/5 bg-white/5 shrink-0">
                 <div>
                   <h2 className="text-xl font-bold">Pembayaran Manual</h2>
                   <p className="text-sm text-muted-foreground mt-1">
@@ -96,100 +96,100 @@ Berikut adalah foto bukti transfer saya:`;
               </div>
 
               {/* Content */}
-              <div className="p-6 space-y-6 overflow-y-auto min-h-0 flex-1">
+              <div className="p-4 space-y-4 overflow-y-auto min-h-0 flex-1">
                 
-                <div className="text-center p-4 rounded-xl bg-orange-500/10 border border-orange-500/20">
-                  <p className="text-sm text-orange-200 mb-1">Total Tagihan</p>
-                  <p className="text-3xl font-black text-white">
+                <div className="text-center p-3 rounded-xl bg-orange-500/10 border border-orange-500/20">
+                  <p className="text-xs text-orange-200 mb-0.5">Total Tagihan</p>
+                  <p className="text-2xl font-black text-white">
                     {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(amount * 16000)}
                   </p>
                 </div>
 
-                <div className="space-y-4">
-                  <h3 className="font-semibold flex items-center text-sm uppercase tracking-wider text-muted-foreground">
-                    <QrCode className="w-4 h-4 mr-2" /> Opsi 1: Scan QRIS
+                <div className="space-y-2">
+                  <h3 className="font-semibold flex items-center text-[11px] uppercase tracking-wider text-muted-foreground">
+                    <QrCode className="w-3 h-3 mr-1.5" /> Opsi 1: Scan QRIS
                   </h3>
-                  <div className="bg-white p-4 rounded-xl flex flex-col items-center justify-center space-y-3 shadow-inner">
-                    <img src="/qris.jpg" alt="QRIS JAIDAV" className="w-full max-w-[200px] h-auto object-contain rounded-lg border-2 border-gray-100" />
-                    <p className="text-xs font-bold text-black mt-2">A.N. JAIDAV</p>
+                  <div className="bg-white p-3 rounded-xl flex flex-col items-center justify-center space-y-2 shadow-inner">
+                    <img src="/qris.jpg" alt="QRIS JAIDAV" className="w-full max-w-[140px] h-auto object-contain rounded-lg border-2 border-gray-100" />
+                    <p className="text-[10px] font-bold text-black mt-1">A.N. JAIDAV</p>
                   </div>
                 </div>
 
-                <div className="relative">
+                <div className="relative py-2">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-white/10"></div>
                   </div>
-                  <div className="relative flex justify-center text-xs uppercase">
+                  <div className="relative flex justify-center text-[10px] uppercase">
                     <span className="bg-black px-2 text-muted-foreground">Atau Transfer E-Wallet</span>
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <h3 className="font-semibold flex items-center text-sm uppercase tracking-wider text-muted-foreground">
-                    <Smartphone className="w-4 h-4 mr-2" /> Opsi 2: Nomor E-Wallet
+                <div className="space-y-2">
+                  <h3 className="font-semibold flex items-center text-[11px] uppercase tracking-wider text-muted-foreground">
+                    <Smartphone className="w-3 h-3 mr-1.5" /> Opsi 2: Nomor E-Wallet
                   </h3>
                   
-                  <div className="space-y-2">
+                  <div className="grid grid-cols-1 gap-2">
                     {[
                       { name: "GoPay", number: EWALLET_GOPAY, color: "text-blue-400" },
                       { name: "DANA", number: EWALLET_DANA, color: "text-blue-500" },
                       { name: "OVO", number: EWALLET_OVO, color: "text-purple-500" }
                     ].map((wallet) => (
-                      <div key={wallet.name} className="flex items-center justify-between p-3 rounded-lg border border-white/5 bg-white/5 hover:bg-white/10 transition-colors">
-                        <div className="flex items-center space-x-3">
-                          <div className={`font-bold ${wallet.color}`}>{wallet.name}</div>
-                          <div className="font-mono text-sm tracking-widest">{wallet.number}</div>
+                      <div key={wallet.name} className="flex items-center justify-between p-2 rounded-lg border border-white/5 bg-white/5 hover:bg-white/10 transition-colors">
+                        <div className="flex items-center space-x-2">
+                          <div className={`font-bold text-xs w-12 ${wallet.color}`}>{wallet.name}</div>
+                          <div className="font-mono text-xs tracking-wider">{wallet.number}</div>
                         </div>
                         <button 
                           onClick={() => copyToClipboard(wallet.number, wallet.name)}
-                          className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-md font-medium transition-colors w-20 flex justify-center"
+                          className="text-[10px] bg-white/10 hover:bg-white/20 px-2 py-1 rounded font-medium transition-colors w-14 flex justify-center"
                         >
-                          {copied === wallet.name ? <Check className="w-4 h-4 text-green-400" /> : "Salin"}
+                          {copied === wallet.name ? <Check className="w-3 h-3 text-green-400" /> : "Salin"}
                         </button>
                       </div>
                     ))}
                   </div>
-                  <p className="text-xs text-muted-foreground text-center">Pastikan nama penerima sesuai sebelum mentransfer.</p>
+                  <p className="text-[10px] text-muted-foreground text-center mt-2">Pastikan nama penerima sesuai sebelum mentransfer.</p>
                 </div>
               </div>
 
-              <div className="p-6 border-t border-white/5 bg-black/50 shrink-0">
-                <div className="mb-4 space-y-3">
+              <div className="p-4 border-t border-white/5 bg-black/50 shrink-0">
+                <div className="mb-3 grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="text-xs text-muted-foreground font-medium">Email Anda (Untuk Menerima Voucher)</label>
+                    <label className="text-[10px] text-muted-foreground font-medium uppercase">Email Voucher</label>
                     <Input 
                       type="email" 
                       placeholder="email@domain.com" 
                       value={customerEmail}
                       onChange={(e) => setCustomerEmail(e.target.value)}
-                      className="bg-black/40 border-white/10 text-white"
+                      className="bg-black/40 border-white/10 text-white h-8 text-xs"
                       required
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs text-muted-foreground font-medium">Nomor WhatsApp Anda</label>
+                    <label className="text-[10px] text-muted-foreground font-medium uppercase">Nomor WhatsApp</label>
                     <Input 
                       type="tel" 
                       placeholder="08123456789" 
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
-                      className="bg-black/40 border-white/10 text-white"
+                      className="bg-black/40 border-white/10 text-white h-8 text-xs"
                       required
                     />
                   </div>
                 </div>
                 
-                <div className="mb-4 p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-300 text-center">
-                  Setelah transfer, klik tombol di bawah untuk mengirim bukti ke Admin. Anda akan menerima <strong>Kode Aktivasi</strong> yang dikirim otomatis ke WA Anda.
+                <div className="mb-3 p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-[10px] leading-snug text-indigo-300 text-center">
+                  Setelah transfer, klik tombol di bawah untuk kirim bukti. <strong>Kode Aktivasi</strong> dikirim ke WA Anda.
                 </div>
                 <Button 
                   onClick={handleWhatsAppConfirm}
-                  className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-lg shadow-green-900/20 text-md font-bold"
+                  className="w-full h-10 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-lg shadow-green-900/20 text-sm font-bold"
                 >
-                  <ExternalLink className="w-4 h-4 mr-2" /> Konfirmasi via WhatsApp
+                  <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> Konfirmasi WhatsApp
                 </Button>
-                <div className="mt-4 flex items-center justify-center text-xs text-muted-foreground">
-                  <ShieldCheck className="w-4 h-4 mr-1 text-green-400" /> Transaksi Aman & Terverifikasi
+                <div className="mt-3 flex items-center justify-center text-[10px] text-muted-foreground">
+                  <ShieldCheck className="w-3 h-3 mr-1 text-green-400" /> Transaksi Aman & Terverifikasi
                 </div>
               </div>
             </GlassCard>
