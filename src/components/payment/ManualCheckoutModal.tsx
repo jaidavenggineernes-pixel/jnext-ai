@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, QrCode, Smartphone, ExternalLink, ShieldCheck, Check } from "lucide-react";
+import { X, QrCode, Smartphone, ExternalLink, ShieldCheck, Check, Download } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Input } from "@/components/ui/Input";
@@ -112,6 +112,13 @@ Berikut adalah foto bukti transfer saya:`;
                   <div className="bg-white p-3 rounded-xl flex flex-col items-center justify-center space-y-2 shadow-inner">
                     <img src="/qris.jpg" alt="QRIS JAIDAV" className="w-full max-w-[140px] h-auto object-contain rounded-lg border-2 border-gray-100" />
                     <p className="text-[10px] font-bold text-black mt-1">A.N. JAIDAV</p>
+                    <a 
+                      href="/qris.jpg" 
+                      download="QRIS_JNext_Payment.jpg"
+                      className="mt-2 flex items-center justify-center text-[10px] font-semibold text-white bg-orange-600 hover:bg-orange-700 px-3 py-1.5 rounded-md transition-colors shadow-sm"
+                    >
+                      <Download className="w-3 h-3 mr-1" /> Unduh QRIS
+                    </a>
                   </div>
                 </div>
 
