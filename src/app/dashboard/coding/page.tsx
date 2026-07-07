@@ -154,7 +154,7 @@ export default function CodingAssistantPage() {
       setMessages((prev) => [...prev, { 
         id: Date.now().toString(), 
         role: "assistant", 
-        content: `⚠️ **System Error:** Jaringan utama JNext saat ini sedang sibuk karena lonjakan pengguna. Silakan tunggu sekitar 30 detik lalu coba kirim perintah Anda kembali.` 
+        content: `⚠️ **Prioritas Jaringan Penuh:** Jalur antrean untuk paket Anda saat ini sedang padat. Ingin pengalaman super cepat tanpa antrean? **Upgrade langganan JNext Anda ke paket Premium sekarang** untuk mendapatkan prioritas utama dan kuota tanpa batas! 🚀💎` 
       }]);
     } finally {
       setIsLoading(false);
