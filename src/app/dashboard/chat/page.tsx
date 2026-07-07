@@ -173,7 +173,7 @@ export default function ChatPage() {
       setMessages((prev) => [...prev, { 
         id: Date.now().toString(), 
         role: "assistant", 
-        content: `⚠️ **System Error:** Jaringan API sibuk atau kuota Google Gemini Anda habis (Rate Limit). Google membatasi 15 pesan per menit untuk akun gratis. Silakan tunggu sekitar 30 detik lalu coba lagi.` 
+        content: `⚠️ **System Error:** Jaringan utama JNext saat ini sedang sibuk karena lonjakan pengguna. Silakan tunggu sekitar 30 detik lalu coba kirim pesan Anda kembali.` 
       }]);
     } finally {
       setIsLoading(false);
