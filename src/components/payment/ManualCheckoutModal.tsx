@@ -29,7 +29,7 @@ export function ManualCheckoutModal({ isOpen, onClose, planName, amount, isYearl
   }, [session]);
 
   // --- ⚠️ PENGATURAN PEMBAYARAN MANUAL (UBAH DI SINI) ⚠️ ---
-  const WHATSAPP_NUMBER = "6285191219129"; // Ganti dengan nomor WhatsApp Anda (Gunakan 62, hilangkan angka 0 di depan)
+  const WHATSAPP_NUMBER = "6289512549614"; // Ganti dengan nomor WhatsApp Anda (Gunakan 62, hilangkan angka 0 di depan)
   const EWALLET_GOPAY = "0851-9121-9129"; // Ganti dengan nomor GoPay Anda
   const EWALLET_DANA = "0851-9121-9129"; // Ganti dengan nomor DANA Anda
   const EWALLET_OVO = "0851-9121-9129"; // Ganti dengan nomor OVO Anda
