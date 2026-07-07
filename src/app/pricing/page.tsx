@@ -140,9 +140,9 @@ export default function PricingPage() {
   const { data: session, update: updateSession } = useSession();
   const router = useRouter();
 
-  const handleSubscribe = (plan: any) => {
+  const handleSubscribe = (plan: { name: string, tier: string, price: { monthly: number, yearly: number } }) => {
     if (!session) {
-      window.location.href = "/auth/login";
+      router.push("/auth/login");
       return;
     }
     setCheckoutPlan(plan);

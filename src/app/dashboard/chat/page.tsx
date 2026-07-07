@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, Loader2, Copy, Check, Paperclip, X, Video } from "lucide-react";
+import { Send, Bot, User, Loader2, Copy, Check, Paperclip, X, Video, Menu, MessageSquare, Plus, Trash2 } from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -14,7 +14,7 @@ import { motion } from "framer-motion";
 type Attachment = { url: string; mimeType: string; name: string };
 type Message = { id: string; role: "user" | "assistant"; content: string; attachments?: Attachment[] };
 
-const CodeBlock = ({ inline, className, children, ...props }: any) => {
+const CodeBlock = ({ inline, className, children, ...props }: { inline?: boolean, className?: string, children?: React.ReactNode, [key: string]: unknown }) => {
   const [isCopied, setIsCopied] = useState(false);
   const match = /language-(\w+)/.exec(className || "");
   const language = match ? match[1] : "text";
@@ -66,6 +66,52 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [conversations, setConversations] = useState<{id: string, title: string, updatedAt: string}[]>([]);
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const fetchConversations = async () => {
+    try {
+      const res = await fetch("/api/chat/history");
+      const data = await res.json();
+      if (data.conversations) setConversations(data.conversations);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchConversations();
+  }, []);
+
+  const loadConversation = async (id: string) => {
+    setCurrentConversationId(id);
+    setIsSidebarOpen(false);
+    setIsLoading(true);
+    setMessages([]);
+    try {
+      const res = await fetch(`/api/chat/${id}`);
+      const data = await res.json();
+      if (data.messages) {
+        setMessages(data.messages.map((m: { id: string, role: "user" | "assistant", content: string }) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content
+        })));
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const startNewChat = () => {
+    setCurrentConversationId(null);
+    setMessages([]);
+    setIsSidebarOpen(false);
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -113,7 +159,7 @@ export default function ChatPage() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages })
+        body: JSON.stringify({ messages: newMessages, conversationId: currentConversationId })
       });
 
       if (!response.ok) {
@@ -125,6 +171,12 @@ export default function ChatPage() {
         throw new Error(errMsg);
       }
       
+      const newConvId = response.headers.get("X-Conversation-Id");
+      if (newConvId && newConvId !== currentConversationId) {
+        setCurrentConversationId(newConvId);
+        fetchConversations(); // refresh list
+      }
+
       if (!response.body) throw new Error("No response body");
 
       const reader = response.body.getReader();
@@ -181,17 +233,82 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-full max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-2 md:mb-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">AI Assistant</h1>
-          <p className="text-sm text-muted-foreground">Powered by advanced AI models</p>
+    <div className="flex h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] -m-4 md:m-0 relative bg-black/20 md:bg-transparent overflow-hidden">
+      
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`fixed inset-y-0 left-0 z-50 w-72 transform bg-[#0a0a0a] border-r border-white/10 transition-transform duration-300 ease-in-out md:relative md:translate-x-0 flex flex-col ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="p-4 flex items-center justify-between border-b border-white/10">
+          <h2 className="font-semibold text-white">Riwayat Chat</h2>
+          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsSidebarOpen(false)}>
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
+        
+        <div className="p-4">
+          <Button onClick={startNewChat} className="w-full bg-primary/20 text-primary hover:bg-primary/30 border border-primary/20">
+            <Plus className="w-4 h-4 mr-2" /> Chat Baru
+          </Button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-3 space-y-1 pb-4">
+          {conversations.map((conv) => (
+            <button
+              key={conv.id}
+              onClick={() => loadConversation(conv.id)}
+              className={`w-full text-left flex items-center p-3 rounded-xl transition-colors ${currentConversationId === conv.id ? "bg-white/10 text-white" : "text-muted-foreground hover:bg-white/5 hover:text-white"}`}
+            >
+              <MessageSquare className="w-4 h-4 mr-3 shrink-0" />
+              <div className="overflow-hidden flex-1">
+                <p className="text-sm truncate font-medium">{conv.title || "New Chat"}</p>
+                <p className="text-[10px] opacity-60 truncate mt-0.5">
+                  {new Date(conv.updatedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                </p>
+              </div>
+            </button>
+          ))}
+          {conversations.length === 0 && (
+            <p className="text-xs text-center text-muted-foreground mt-10">Belum ada riwayat chat.</p>
+          )}
         </div>
       </div>
 
-      <GlassCard className="flex-1 flex flex-col overflow-hidden p-0">
-        <div className="flex-1 overflow-y-auto p-4 space-y-6">
-          {messages.length === 0 ? (
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col h-full min-w-0 max-w-5xl mx-auto w-full md:p-4">
+        
+        {/* Mobile Header */}
+        <div className="md:hidden flex items-center p-4 border-b border-white/10 bg-black/40 backdrop-blur-md">
+          <Button variant="ghost" size="icon" className="mr-3" onClick={() => setIsSidebarOpen(true)}>
+            <Menu className="w-5 h-5" />
+          </Button>
+          <div className="font-semibold truncate flex-1 text-sm text-white">
+            {currentConversationId ? conversations.find(c => c.id === currentConversationId)?.title || "Percakapan" : "AI Assistant"}
+          </div>
+          <Button variant="ghost" size="icon" onClick={startNewChat}>
+            <Plus className="w-5 h-5" />
+          </Button>
+        </div>
+
+        {/* Desktop Header */}
+        <div className="hidden md:flex items-center justify-between mb-4 px-2">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-white">
+              {currentConversationId ? conversations.find(c => c.id === currentConversationId)?.title || "Percakapan" : "AI Assistant"}
+            </h1>
+            <p className="text-sm text-muted-foreground">Powered by advanced AI models</p>
+          </div>
+        </div>
+
+        <GlassCard className="flex-1 flex flex-col overflow-hidden p-0 rounded-none md:rounded-2xl border-x-0 md:border-x">
+          <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+            {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
               <Bot className="w-16 h-16 mb-4 opacity-20" />
               <p className="text-lg">How can I help you today?</p>
@@ -324,9 +441,10 @@ export default function ChatPage() {
             >
               <Send className="w-4 h-4" />
             </Button>
-          </form>
-        </div>
-      </GlassCard>
+            </form>
+          </div>
+        </GlassCard>
+      </div>
     </div>
   );
 }

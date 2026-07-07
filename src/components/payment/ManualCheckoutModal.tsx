@@ -22,11 +22,13 @@ export function ManualCheckoutModal({ isOpen, onClose, planName, amount, isYearl
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
 
+  // Update email once session is loaded if it's not already set
   useEffect(() => {
-    if (session?.user?.email) {
+    if (session?.user?.email && !customerEmail) {
       setCustomerEmail(session.user.email);
     }
-  }, [session]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.user?.email]);
 
   // --- ⚠️ PENGATURAN PEMBAYARAN MANUAL (UBAH DI SINI) ⚠️ ---
   const WHATSAPP_NUMBER = "6289512549614"; // Ganti dengan nomor WhatsApp Anda (Gunakan 62, hilangkan angka 0 di depan)

@@ -193,11 +193,15 @@ Always aim to exceed the user's expectations.`,
       }
     });
 
+    const responseHeaders = {
+      'X-Conversation-Id': currentConversationId || ''
+    };
+
     // Use UI Message Stream Response for latest Vercel AI SDK
     if (typeof (result as any).toUIMessageStreamResponse === "function") {
-      return (result as any).toUIMessageStreamResponse();
+      return (result as any).toUIMessageStreamResponse({ headers: responseHeaders });
     } else if (typeof (result as any).toTextStreamResponse === "function") {
-      return (result as any).toTextStreamResponse();
+      return (result as any).toTextStreamResponse({ headers: responseHeaders });
     } else {
       throw new Error(`streamText result has no known stream response method. Keys: ${Object.keys(result).join(', ')}`);
     }
