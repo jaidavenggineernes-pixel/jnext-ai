@@ -60,7 +60,7 @@ const plans = [
     tier: "PLUS",
     label: "Paling Populer",
     popular: true,
-    price: { monthly: 8, yearly: 6.4 },
+    price: { monthly: 12, yearly: 9.6 },
     description: "Untuk pengguna umum dan freelancer",
     features: [
       "AI Chat lebih pintar",
@@ -79,7 +79,7 @@ const plans = [
     name: "JNext AI Pro",
     tier: "PRO",
     label: "Untuk Kreator Profesional",
-    price: { monthly: 14, yearly: 11.2 },
+    price: { monthly: 18, yearly: 14.4 },
     description: "Developer dan Kreator Konten",
     features: [
       "AI Chat Premium",
@@ -98,7 +98,7 @@ const plans = [
     name: "JNext AI Expert",
     tier: "EXPERT",
     label: "Untuk Developer Profesional",
-    price: { monthly: 21, yearly: 16.8 },
+    price: { monthly: 25, yearly: 20.0 },
     description: "Developer Profesional",
     features: [
       "Semua fitur paket Pro",
@@ -116,7 +116,7 @@ const plans = [
     name: "JNext AI Premium",
     tier: "PREMIUM",
     label: "Ultimate Experience",
-    price: { monthly: 29, yearly: 23.2 },
+    price: { monthly: 33, yearly: 26.4 },
     description: "Perusahaan, Startup, dan Power User",
     features: [
       "Semua fitur Expert",

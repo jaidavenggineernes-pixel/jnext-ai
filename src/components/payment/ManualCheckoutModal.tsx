@@ -55,7 +55,7 @@ export function ManualCheckoutModal({ isOpen, onClose, planName, amount, isYearl
 - Email: ${customerEmail}
 - WA: ${customerPhone}
 
-Berikut adalah foto bukti transfer saya:`;
+Berikut adalah foto bukti transfer saya:${planName.toLowerCase().includes("student") ? "\n(SAYA JUGA MELAMPIRKAN FOTO KARTU PELAJAR/MAHASISWA YANG MASIH AKTIF SEBAGAI BUKTI)" : ""}`;
     
     const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(waUrl, "_blank");
@@ -189,6 +189,13 @@ Berikut adalah foto bukti transfer saya:`;
                 <div className="mb-3 p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-[10px] leading-snug text-indigo-300 text-center">
                   Setelah transfer, klik tombol di bawah untuk kirim bukti. <strong>Kode Aktivasi</strong> dikirim ke WA Anda.
                 </div>
+                
+                {planName.toLowerCase().includes("student") && (
+                  <div className="mb-3 p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-[10px] leading-snug text-red-400 text-center font-medium">
+                    ⚠️ <strong>WAJIB:</strong> Karena ini adalah paket Pelajar/Mahasiswa, Anda wajib mengirimkan foto Kartu Pelajar (KTM) yang masih aktif beserta bukti transfer ke WhatsApp Admin. Tanpa bukti pelajar, aktivasi akan ditolak!
+                  </div>
+                )}
+                
                 <Button 
                   onClick={handleWhatsAppConfirm}
                   className="w-full h-10 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-lg shadow-green-900/20 text-sm font-bold"
