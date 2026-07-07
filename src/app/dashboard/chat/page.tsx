@@ -14,7 +14,8 @@ import { motion } from "framer-motion";
 type Attachment = { url: string; mimeType: string; name: string };
 type Message = { id: string; role: "user" | "assistant"; content: string; attachments?: Attachment[] };
 
-const CodeBlock = ({ inline, className, children, ...props }: { inline?: boolean, className?: string, children?: React.ReactNode, [key: string]: unknown }) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const CodeBlock = ({ inline, className, children, ...props }: any) => {
   const [isCopied, setIsCopied] = useState(false);
   const match = /language-(\w+)/.exec(className || "");
   const language = match ? match[1] : "text";

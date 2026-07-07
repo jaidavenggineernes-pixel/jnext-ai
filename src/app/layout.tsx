@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
@@ -13,11 +13,20 @@ const fontBody = Inter({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export const metadata: Metadata = {
   title: "JNext - The Ultimate AI Platform",
   description: "All-in-one AI platform for Chat, Coding, Images, Video, and more.",
+  manifest: "/manifest.json",
   icons: {
     icon: "/logo.png",
+    apple: "/logo.png",
   }
 };
 
