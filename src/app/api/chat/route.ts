@@ -18,7 +18,7 @@ const TIER_WORD_LIMITS: any = {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    const { messages, conversationId } = await req.json();
+    const { messages, conversationId, userTime } = await req.json();
 
     if (!messages || messages.length === 0) {
       return new Response(JSON.stringify({ error: "Messages are required" }), { status: 400 });
@@ -164,7 +164,7 @@ Guidelines:
 2. When writing code, provide complete, production-ready snippets with comments explaining complex logic. Do not leave placeholder comments like "add logic here" unless requested.
 3. Be proactive: if a user asks for a simple website, provide a beautiful, modern layout with CSS/Tailwind included, not just basic HTML.
 4. Communicate in a professional, warm, and highly intelligent tone. 
-5. Today's date is ${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}.
+5. The user's current local date and time is ${userTime || new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}. Greet the user accordingly (e.g. Selamat Pagi, Selamat Siang, Selamat Sore, Selamat Malam) based on this time if it's the beginning of a conversation.
 6. Answer in Indonesian (Bahasa Indonesia) by default, unless the user uses English. 
 Always aim to exceed the user's expectations.`,
       onFinish: async ({ text }) => {

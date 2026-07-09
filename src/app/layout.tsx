@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
+import { SplashScreen } from "@/components/SplashScreen";
 
 const fontHeading = Outfit({
   variable: "--font-heading",
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body
         className={`${fontBody.className} ${fontHeading.variable} ${fontBody.variable} antialiased`}
       >
+        <SplashScreen />
         <Providers>
           {children}
         </Providers>

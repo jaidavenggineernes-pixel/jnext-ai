@@ -160,7 +160,11 @@ export default function ChatPage() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages, conversationId: currentConversationId })
+        body: JSON.stringify({ 
+          messages: newMessages, 
+          conversationId: currentConversationId,
+          userTime: new Date().toLocaleString('id-ID', { timeZoneName: 'short' })
+        })
       });
 
       if (!response.ok) {
