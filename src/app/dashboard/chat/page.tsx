@@ -107,6 +107,23 @@ export default function ChatPage() {
     }
   };
 
+  const deleteConversation = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("Hapus obrolan ini?")) return;
+    
+    try {
+      const res = await fetch(`/api/chat/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setConversations(prev => prev.filter(c => c.id !== id));
+        if (currentConversationId === id) {
+          startNewChat();
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const startNewChat = () => {
     setCurrentConversationId(null);
     setMessages([]);
@@ -265,19 +282,26 @@ export default function ChatPage() {
 
         <div className="flex-1 overflow-y-auto px-3 space-y-1 pb-4">
           {conversations.map((conv) => (
-            <button
-              key={conv.id}
-              onClick={() => loadConversation(conv.id)}
-              className={`w-full text-left flex items-center p-3 rounded-xl transition-colors ${currentConversationId === conv.id ? "bg-white/10 text-white" : "text-muted-foreground hover:bg-white/5 hover:text-white"}`}
-            >
-              <MessageSquare className="w-4 h-4 mr-3 shrink-0" />
-              <div className="overflow-hidden flex-1">
-                <p className="text-sm truncate font-medium">{conv.title || "New Chat"}</p>
-                <p className="text-[10px] opacity-60 truncate mt-0.5">
-                  {new Date(conv.updatedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                </p>
-              </div>
-            </button>
+            <div key={conv.id} className="relative group">
+              <button
+                onClick={() => loadConversation(conv.id)}
+                className={`w-full text-left flex items-center p-3 rounded-xl transition-colors pr-10 ${currentConversationId === conv.id ? "bg-white/10 text-white" : "text-muted-foreground hover:bg-white/5 hover:text-white"}`}
+              >
+                <MessageSquare className="w-4 h-4 mr-3 shrink-0" />
+                <div className="overflow-hidden flex-1">
+                  <p className="text-sm truncate font-medium">{conv.title || "New Chat"}</p>
+                  <p className="text-[10px] opacity-60 truncate mt-0.5">
+                    {new Date(conv.updatedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              </button>
+              <button
+                onClick={(e) => deleteConversation(conv.id, e)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
           ))}
           {conversations.length === 0 && (
             <p className="text-xs text-center text-muted-foreground mt-10">Belum ada riwayat chat.</p>
