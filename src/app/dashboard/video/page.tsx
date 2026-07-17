@@ -155,7 +155,7 @@ export default function VideoCreatorPage() {
                 {isMotionGraphics ? (
                   <motion.img 
                     initial={{ scale: 1.0, x: 0, y: 0 }}
-                    animate={{ scale: 1.15, x: Math.random() > 0.5 ? -15 : 15, y: Math.random() > 0.5 ? -10 : 10 }}
+                    animate={{ scale: 1.15, x: 15, y: -10 }}
                     transition={{ duration: 30, ease: "linear", repeat: Infinity, repeatType: "reverse" }}
                     src={generatedVideo} 
                     alt={prompt}

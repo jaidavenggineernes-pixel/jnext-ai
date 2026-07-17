@@ -153,7 +153,9 @@ export async function POST(req: Request) {
     });
 
     const result = streamText({
-      model: googleProvider('gemini-2.5-flash'),
+      model: googleProvider('gemini-2.5-flash', {
+        useSearchGrounding: true,
+      }),
       messages: coreMessages,
       system: `You are JNext, an elite AI assistant and world-class senior software engineer created by JAIDAV. 
 You possess deep, comprehensive knowledge of all programming languages, frameworks, and computer science concepts. 

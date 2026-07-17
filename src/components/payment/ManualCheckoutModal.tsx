@@ -44,10 +44,25 @@ export function ManualCheckoutModal({ isOpen, onClose, planName, amount, isYearl
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const handleWhatsAppConfirm = () => {
+  const handleWhatsAppConfirm = async () => {
     if (!customerEmail || !customerPhone) {
       alert("Mohon isi Email dan Nomor WhatsApp Anda terlebih dahulu agar kami bisa mengirimkan kode voucher.");
       return;
+    }
+
+    try {
+      await fetch("/api/payment/manual", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          tier: planName.toUpperCase().replace(/\s+/g, "_"), 
+          amount, 
+          isYearly, 
+          planName 
+        }),
+      });
+    } catch (e) {
+      console.error("Gagal mencatat invoice manual", e);
     }
 
     const formattedAmount = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(amount * 16000);
