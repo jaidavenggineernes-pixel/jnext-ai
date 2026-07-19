@@ -195,7 +195,7 @@ export default function AdminDashboard() {
             <p className="text-sm text-muted-foreground max-w-xs mx-auto">
               Cetak dan kelola voucher JNext untuk pelanggan yang melakukan pembayaran manual via transfer.
             </p>
-            <a href="/dashboard/admin/codes" className="inline-block mt-4">
+            <a href="/admin/codes" className="inline-block mt-4">
               <div className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-8 rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95">
                 Buka Pabrik Voucher
               </div>
