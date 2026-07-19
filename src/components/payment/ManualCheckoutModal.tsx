@@ -25,6 +25,7 @@ export function ManualCheckoutModal({ isOpen, onClose, planName, amount, isYearl
   // Update email once session is loaded if it's not already set
   useEffect(() => {
     if (session?.user?.email && !customerEmail) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCustomerEmail(session.user.email);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

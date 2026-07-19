@@ -38,7 +38,7 @@ export default function VideoCreatorPage() {
       
       setGeneratedVideo(data.videoUrl);
       setIsMotionGraphics(data.isMotionGraphics || false);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setErrorMsg(err.message);
     } finally {
       setIsGenerating(false);

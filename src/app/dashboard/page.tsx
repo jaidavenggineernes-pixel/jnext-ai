@@ -84,7 +84,7 @@ export default function DashboardOverview() {
         <GlassCard>
           <div className="text-center py-12 text-muted-foreground">
             <History className="w-12 h-12 mx-auto mb-4 opacity-20" />
-            <p>You haven't created anything yet.</p>
+            <p>You haven&apos;t created anything yet.</p>
           </div>
         </GlassCard>
       </div>

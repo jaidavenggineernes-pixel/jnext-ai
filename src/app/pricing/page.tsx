@@ -12,7 +12,7 @@ import { ManualCheckoutModal } from "@/components/payment/ManualCheckoutModal";
 // Declare global snap object
 declare global {
   interface Window {
-    snap: any;
+    snap: unknown;
   }
 }
 
@@ -135,7 +135,7 @@ const plans = [
 
 export default function PricingPage() {
   const [isYearly, setIsYearly] = useState(false);
-  const [checkoutPlan, setCheckoutPlan] = useState<any>(null);
+  const [checkoutPlan, setCheckoutPlan] = useState<{ name: string, tier: string, price: { monthly: number, yearly: number } } | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const { data: session, update: updateSession } = useSession();
   const router = useRouter();
