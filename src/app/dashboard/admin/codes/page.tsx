@@ -54,12 +54,19 @@ export default function AdminCodesPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tier: selectedTier, phone: customerPhone })
       });
+      const data = await res.json();
+      
       if (res.ok) {
         setCustomerPhone("");
         fetchCodes();
+        alert("Kode berhasil dicetak!");
+      } else {
+        alert("Gagal mencetak: " + (data.error || "Unknown error"));
+        console.error("Failed to generate code:", data);
       }
     } catch (error) {
       console.error("Failed to generate code:", error);
+      alert("Kesalahan jaringan saat mencetak kode.");
     } finally {
       setIsGenerating(false);
     }

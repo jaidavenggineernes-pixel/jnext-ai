@@ -96,7 +96,7 @@ Berikut adalah *Kode Aktivasi* rahasia Anda:
 
 Selamat menikmati fitur premium JNext! ✨`;
 
-        await fetch("https://api.fonnte.com/send", {
+        fetch("https://api.fonnte.com/send", {
           method: "POST",
           headers: {
             "Authorization": fonnteToken,

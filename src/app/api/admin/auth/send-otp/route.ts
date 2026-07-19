@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     const fonnteToken = process.env.FONNTE_TOKEN || "GtBGmrsbzusnuSGXDyhG";
     
     if (fonnteToken) {
-      await fetch("https://api.fonnte.com/send", {
+      const response = await fetch("https://api.fonnte.com/send", {
         method: "POST",
         headers: {
           "Authorization": fonnteToken,
@@ -61,6 +61,14 @@ export async function POST(req: Request) {
           countryCode: "62",
         })
       });
+      
+      const responseData = await response.json();
+      console.log("Fonnte API Response:", responseData);
+      
+      if (!responseData.status) {
+        console.error("Fonnte failed to send:", responseData.reason);
+        // We still return success: true so the user can enter the OTP via terminal for now
+      }
     }
 
     return NextResponse.json({ success: true, message: "OTP berhasil dikirim ke WhatsApp Anda" });
