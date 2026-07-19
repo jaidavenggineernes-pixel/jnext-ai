@@ -20,7 +20,8 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (session.user.email !== "jaidav.enggineernes@gmail.com") {
+    const masterEmails = ["jaidav.enggineernes@gmail.com", "jaixstoreid@gmail.com"];
+    if (!masterEmails.includes(session.user.email)) {
       const user = await prisma.user.findUnique({
         where: { email: session.user.email }
       });
@@ -53,7 +54,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (session.user.email !== "jaidav.enggineernes@gmail.com") {
+    const masterEmails = ["jaidav.enggineernes@gmail.com", "jaixstoreid@gmail.com"];
+    if (!masterEmails.includes(session.user.email)) {
       const user = await prisma.user.findUnique({
         where: { email: session.user.email }
       });
